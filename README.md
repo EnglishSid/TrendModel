@@ -5,6 +5,7 @@
 
 * [Import Scripts](importScripts.md)
 * [graph.db 4 neo4j](graph.db.zip)
+* [Setup your neo4j sandbox](https://github.dxc.com/DigitalExplorer/Digital-Explorer-Specs/blob/master/Sandbox/SandboxSetup/readme.md)
 
 ---
 
