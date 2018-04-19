@@ -1,0 +1,80 @@
+<html>
+    <head>
+        <title>Top Use Cases</title>
+        <style type="text/css">
+            #viz {
+                width: 1900px;
+                height: 950px;
+            }
+        </style>
+        <script src="https://rawgit.com/neo4j-contrib/neovis.js/master/dist/neovis.js"></script>
+    </head>   
+    <h5><a href="index.html">BACK</a></h5>
+    <h2>Top Use Cases and their Technologies</h2>
+    <script>
+        function draw() {
+            var config = {
+                container_id: "viz",
+                server_url: "bolt://localhost:7687",
+                server_user: "neo4j",
+                server_password: "dxc",
+                labels: {
+                    "Industry": {
+                        caption: "name",
+                        size : 50
+                    },
+                    "Mission": {
+                        caption: "name",
+                        size : 50
+                    },
+                    "StrategicPriorities": {
+                        caption: "name",
+                        size : 50
+                    },
+                    "Program": {
+                        caption: "name",
+                        size : 50
+                    },
+                    "UseCase": {
+                        caption: "name",
+                        size : "PCount"
+                    },
+                    "Technology": {
+                        caption: "name",
+                        size : "UCCount"
+                    }                    
+                },
+                relationships: {
+                    "HAS": {
+                        caption: false,
+                        "thickness": 0.1
+                    },
+                    "INCLUDES": {
+                        caption: false
+                        ,
+                        "thickness": 0.2
+                    },
+                    "CONTAIN": {
+                        caption: false,
+                        "thickness": 0.3
+                    },
+                    "ADDRESS": {
+                        caption: false,
+                        "thickness": 0.2
+                    },
+                    "REALIZEDBY": {
+                        caption: false,
+                        "thickness": 0.2
+                    }
+                },
+                initial_cypher: "match (uc:UseCase)-[r]-(t:Technology) where uc.PCount > 2 return uc,t,r"
+                
+            };
+            var viz = new NeoVis.default(config);
+            viz.render();
+        }
+    </script>
+    <body onload="draw()">
+        <div id="viz"></div>
+    </body>
+</html>
