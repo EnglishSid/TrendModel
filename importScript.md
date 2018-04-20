@@ -92,6 +92,16 @@ RETURN uc,t
 
 ---
 
+# Indexes
+
+`CREATE INDEX ON :Industry(name)`
+`CREATE INDEX ON :Mission(name)`
+`CREATE INDEX ON :StrategicPriorities(name)`
+`CREATE INDEX ON :Program(name)`
+`CREATE INDEX ON :Technology(name)`
+
+---
+
 # Some calculation queries
 
 Add Use Case Count to Technologies
