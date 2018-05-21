@@ -16,44 +16,40 @@
     "text-color-internal": "#FFFFFF",
     "caption": "<type>"
   },
-  "node.*": {
+  "node.Industry": {
     "color": "#68BDF6",
     "border-color": "#5CA8DB",
     "text-color-internal": "#FFFFFF",
-    "defaultCaption": "<id>"
+    "caption": "{name}"
   },
-  "node.Industry": {
-    "color": "#0570B0",
-    "border-color": "#0570B0",
+  "node.Program": {
+    "color": "#6DCE9E",
+    "border-color": "#60B58B",
     "text-color-internal": "#FFFFFF",
-    "caption": "{name}",
-    "diameter": "70px"
+    "caption": "{name}"
   },
-  
-  "node.Person": {
+  "node.StrategicPriorities": {
+    "color": "#FF756E",
+    "border-color": "#E06760",
+    "text-color-internal": "#FFFFFF",
+    "caption": "{name}"
+  },
+  "node.Technology": {
+    "color": "#DE9BF9",
+    "border-color": "#BF85D6",
+    "text-color-internal": "#FFFFFF",
+    "caption": "{name}"
+  },
+  "node.UseCase": {
+    "color": "#FB95AF",
+    "border-color": "#E0849B",
+    "text-color-internal": "#FFFFFF",
+    "caption": "{name}"
+  },
+  "node.Mission": {
     "color": "#FFD86E",
     "border-color": "#EDBA39",
     "text-color-internal": "#604A0E",
     "caption": "{name}"
-  },
-  "node.Mission": {
-    "caption": "{name}",
-    "color": "#FB95AF",
-    "border-color": "#E0849B",
-    "text-color-internal": "#FFFFFF",
-    "diameter": "90px"
-  },
-  "node.StrategicPriorities": {
-    "defaultCaption": "<id>",
-    "color": "#FFD86E",
-    "border-color": "#EDBA39",
-    "text-color-internal": "#604A0E",
-    "diameter": "100px"
-  },
-  "relationship.HAS": {
-    "shaft-width": "8px",
-    "color": "#68BDF6",
-    "border-color": "#5CA8DB",
-    "text-color-internal": "#FFFFFF"
   }
 }

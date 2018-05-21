@@ -3,7 +3,7 @@
 
 ## Bloom Queries
 
-`TopTrends`
+`Top Technology`
 
 ~~~
 match (t:Technology) return t order by t.UCCount DESC limit 20

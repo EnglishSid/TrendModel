@@ -132,3 +132,32 @@ match (u:UseCase)
 set u.PCountFactor=u.PCount*10
 ~~~
 
+---
+## Person 2 Industry
+
+~~~
+LOAD csv with headers from "file:///P2I.csv" as IDC
+MERGE (p:Person {name:lower(IDC.Person)})
+WITH IDC, p
+MATCH (i:Industry {name:lower(IDC.VERTICALS)})
+MERGE (p)-[:ASSIGNED]->(i)
+RETURN i,p
+~~~
+
+
+---
+# Indexes
+
+CREATE INDEX ON :Person(name)
+
+CREATE INDEX ON :Technology(name)
+CREATE INDEX ON :Mission(name)
+CREATE INDEX ON :Industry(name)
+CREATE INDEX ON :Program(name)
+CREATE INDEX ON :StrategicPriorities(name)
+CREATE INDEX ON :UseCase(name)
+
+
+
+
+
