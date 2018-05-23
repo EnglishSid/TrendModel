@@ -23,5 +23,12 @@
 `allNodes`
 
 
+### Others
+
+`industry  person`
+
+
+
+
 
 

@@ -2,7 +2,7 @@
 ## Industry
 ~~~~
 LOAD csv with headers from "file:///idc.csv" as IDC
-MERGE (i:Industry {name:lower(IDC.Industry)})
+MERGE (i:IDCIndustry {name:lower(IDC.Industry)})
 ~~~~
 
 ## Mission
@@ -11,22 +11,22 @@ MERGE (i:Industry {name:lower(IDC.Industry)})
 
 ~~~~
 LOAD csv with headers from "file:///idc.csv" as IDC
-MERGE (m:Mission {name:lower(IDC.Mission)})
+MERGE (m:IDCMission {name:lower(IDC.Mission)})
 WITH IDC, m
-MATCH (i:Industry {name:lower(IDC.Industry)})
+MATCH (i:IDCIndustry {name:lower(IDC.Industry)})
 MERGE (i)-[:HAS]->(m)
 RETURN i,m
 ~~~~
 
 ## Strategic Priorities
 
-(m)-[:HAS]->(sp)
+(m)-[:INCLUDES]->(sp)
 
 ~~~
 LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (sp:StrategicPriorities {name:lower(IDC.StrategicPriorities)})
+MERGE (sp:IDCStrategicPriorities {name:lower(IDC.StrategicPriorities)})
 WITH IDC, sp
-MATCH (m:Mission {name:lower(IDC.Mission)})
+MATCH (m:IDCMission {name:lower(IDC.Mission)})
 MERGE (m)-[:INCLUDES]->(sp)
 RETURN m,sp
 ~~~
@@ -49,9 +49,9 @@ RETURN sp,p
 
 ~~~
 LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (p:Program {name:lower(IDC.Programs)})
+MERGE (p:IDCProgram {name:lower(IDC.Programs)})
 WITH IDC, p
-MATCH (i:Industry {name:lower(IDC.Industry)})--(m:Mission {name:lower(IDC.Mission)})--(sp:StrategicPriorities {name:lower(IDC.StrategicPriorities)})
+MATCH (i:IDCIndustry {name:lower(IDC.Industry)})--(m:IDCMission {name:lower(IDC.Mission)})--(sp:IDCStrategicPriorities {name:lower(IDC.StrategicPriorities)})
 MERGE (sp)-[:CONTAIN]->(p)
 RETURN sp,p
 ~~~
@@ -63,9 +63,9 @@ RETURN sp,p
 
 ~~~
 LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (uc:UseCase {name:lower(IDC.UseCase),CurrentSituation:lower(IDC.CurrentSituation)})
+MERGE (uc:IDCUseCase {name:lower(IDC.UseCase),CurrentSituation:lower(IDC.CurrentSituation)})
 with uc, IDC
-MATCH (i:Industry {name:lower(IDC.Industry)})--(m:Mission {name:lower(IDC.Mission)})--(sp:StrategicPriorities {name:lower(IDC.StrategicPriorities)})--(p:Program {name:lower(IDC.Programs),industry:lower(IDC.Industry)})
+MATCH (i:IDCIndustry {name:lower(IDC.Industry)})--(m:IDCMission {name:lower(IDC.Mission)})--(sp:IDCStrategicPriorities {name:lower(IDC.StrategicPriorities)})--(p:IDCProgram {name:lower(IDC.Programs),IDCIndustry:lower(IDC.Industry)})
 MERGE (p)-[:ADDRESS]->(uc)
 RETURN p,uc
 ~~~
@@ -74,9 +74,9 @@ RETURN p,uc
 
 ~~~
 LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (uc:UseCase {name:lower(IDC.UseCase)})
+MERGE (uc:IDCUseCase {name:lower(IDC.UseCase)})
 with uc, IDC
-MATCH (p:Program {name:lower(IDC.Programs)})
+MATCH (p:IDCProgram {name:lower(IDC.Programs)})
 MERGE (p)-[:ADDRESS]->(uc)
 ~~~
 
@@ -84,21 +84,11 @@ MERGE (p)-[:ADDRESS]->(uc)
 ##  technology
 
 LOAD csv with headers from "file:///idctech.csv" AS IDCtech
-MERGE (t:Technology {name:lower(IDCtech.t1)})
+MERGE (t:IDCTechnology {name:lower(IDCtech.t1)})
 with t, IDCtech
-MATCH (uc:UseCase {name:lower(IDCtech.UseCase)})
+MATCH (uc:IDCUseCase {name:lower(IDCtech.UseCase)})
 MERGE (uc)-[:REALIZEDBY]->(t)
 RETURN uc,t
-
----
-
-# Indexes
-
-`CREATE INDEX ON :Industry(name)`
-`CREATE INDEX ON :Mission(name)`
-`CREATE INDEX ON :StrategicPriorities(name)`
-`CREATE INDEX ON :Program(name)`
-`CREATE INDEX ON :Technology(name)`
 
 ---
 
@@ -106,7 +96,7 @@ RETURN uc,t
 
 Add Use Case Count to Technologies
 ~~~
-MATCH (t:Technology)--(uc:UseCase)
+MATCH (t:IDCTechnology)--(uc:IDCUseCase)
 WITH t, t.name as TechnologyName, collect(t) as nodelist, Count(*) as count
 set t.UCCount=count
 ~~~
@@ -114,7 +104,7 @@ set t.UCCount=count
 
 Add Program Count to Use Cases
 ~~~
-MATCH (p:Program)--(uc:UseCase)
+MATCH (p:IDCProgram)--(uc:IDCUseCase)
 WITH uc, uc.name as UseCaseName, collect(uc) as nodelist, Count(*) as count
 set uc.PCount=count
 ~~~
@@ -123,12 +113,12 @@ set uc.PCount=count
 ## multiple them up for the views
 
 ~~~
-match (t:Technology)
+match (t:IDCTechnology)
 set t.UCCountFactor=t.UCCount*10
 ~~~
 
 ~~~
-match (u:UseCase)
+match (u:IDCUseCase)
 set u.PCountFactor=u.PCount*10
 ~~~
 
@@ -139,7 +129,7 @@ set u.PCountFactor=u.PCount*10
 LOAD csv with headers from "file:///P2I.csv" as IDC
 MERGE (p:Person {name:lower(IDC.Person)})
 WITH IDC, p
-MATCH (i:Industry {name:lower(IDC.VERTICALS)})
+MATCH (i:IDCIndustry {name:lower(IDC.VERTICALS)})
 MERGE (p)-[:ASSIGNED]->(i)
 RETURN i,p
 ~~~
@@ -149,13 +139,12 @@ RETURN i,p
 # Indexes
 
 CREATE INDEX ON :Person(name)
-
-CREATE INDEX ON :Technology(name)
-CREATE INDEX ON :Mission(name)
-CREATE INDEX ON :Industry(name)
-CREATE INDEX ON :Program(name)
-CREATE INDEX ON :StrategicPriorities(name)
-CREATE INDEX ON :UseCase(name)
+CREATE INDEX ON :IDCTechnology(name)
+CREATE INDEX ON :IDCMission(name)
+CREATE INDEX ON :IDCIndustry(name)
+CREATE INDEX ON :IDCProgram(name)
+CREATE INDEX ON :IDCStrategicPriorities(name)
+CREATE INDEX ON :IDCUseCase(name)
 
 
 
