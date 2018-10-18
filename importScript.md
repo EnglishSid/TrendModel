@@ -1,7 +1,7 @@
 
 ## Industry
 ~~~~
-LOAD csv with headers from "file:///idc.csv" as IDC
+LOAD csv with headers from "file:///idc2018.csv" as IDC
 MERGE (i:IDCIndustry {name:lower(IDC.Industry)})
 ~~~~
 
@@ -10,7 +10,7 @@ MERGE (i:IDCIndustry {name:lower(IDC.Industry)})
 - (i)-[:HAS]->(m)
 
 ~~~~
-LOAD csv with headers from "file:///idc.csv" as IDC
+LOAD csv with headers from "file:///idc2018.csv" as IDC
 MERGE (m:IDCMission {name:lower(IDC.Mission)})
 WITH IDC, m
 MATCH (i:IDCIndustry {name:lower(IDC.Industry)})
@@ -23,7 +23,7 @@ RETURN i,m
 (m)-[:INCLUDES]->(sp)
 
 ~~~
-LOAD csv with headers from "file:///idc.csv" AS IDC
+LOAD csv with headers from "file:///idc2018.csv" AS IDC
 MERGE (sp:IDCStrategicPriorities {name:lower(IDC.StrategicPriorities)})
 WITH IDC, sp
 MATCH (m:IDCMission {name:lower(IDC.Mission)})
@@ -37,18 +37,7 @@ RETURN m,sp
 
 
 ~~~
-LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (p:Program {name:lower(IDC.Programs),industry:lower(IDC.Industry)})
-WITH IDC, p
-MATCH (i:Industry {name:lower(IDC.Industry)})--(m:Mission {name:lower(IDC.Mission)})--(sp:StrategicPriorities {name:lower(IDC.StrategicPriorities)})
-MERGE (sp)-[:CONTAIN]->(p)
-RETURN sp,p
-~~~
-
-### Revision
-
-~~~
-LOAD csv with headers from "file:///idc.csv" AS IDC
+LOAD csv with headers from "file:///idc2018.csv" AS IDC
 MERGE (p:IDCProgram {name:lower(IDC.Programs)})
 WITH IDC, p
 MATCH (i:IDCIndustry {name:lower(IDC.Industry)})--(m:IDCMission {name:lower(IDC.Mission)})--(sp:IDCStrategicPriorities {name:lower(IDC.StrategicPriorities)})
@@ -59,22 +48,14 @@ RETURN sp,p
 
 ## Use Case
 
-(p)-[:HAS]->(uc)
+(p)-[:ADDRESS]->(uc)
 
-~~~
-LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (uc:IDCUseCase {name:lower(IDC.UseCase),CurrentSituation:lower(IDC.CurrentSituation)})
-with uc, IDC
-MATCH (i:IDCIndustry {name:lower(IDC.Industry)})--(m:IDCMission {name:lower(IDC.Mission)})--(sp:IDCStrategicPriorities {name:lower(IDC.StrategicPriorities)})--(p:IDCProgram {name:lower(IDC.Programs),IDCIndustry:lower(IDC.Industry)})
-MERGE (p)-[:ADDRESS]->(uc)
-RETURN p,uc
-~~~
 
 ### Revision - removed the currentSituation
 
 ~~~
-LOAD csv with headers from "file:///idc.csv" AS IDC
-MERGE (uc:IDCUseCase {name:lower(IDC.UseCase)})
+LOAD csv with headers from "file:///idc2018.csv" AS IDC
+MERGE (uc:IDCUseCase {name:lower(IDC.UseCase),Summary:lower(IDC.UseCaseSummary)})
 with uc, IDC
 MATCH (p:IDCProgram {name:lower(IDC.Programs)})
 MERGE (p)-[:ADDRESS]->(uc)
@@ -83,12 +64,17 @@ MERGE (p)-[:ADDRESS]->(uc)
 
 ##  technology
 
-LOAD csv with headers from "file:///idctech.csv" AS IDCtech
-MERGE (t:IDCTechnology {name:lower(IDCtech.t1)})
-with t, IDCtech
+
+** update the technologyDeployed column to replace `;` with `,` and `and` with `,` and `, ,` with `,` and ` , ` with `,`
+~~~
+LOAD csv with headers from "file:///idc2018.csv" AS IDCtech
 MATCH (uc:IDCUseCase {name:lower(IDCtech.UseCase)})
+with uc, SPLIT(IDCtech.TechnologyDeployed,",") AS word
+UNWIND range (0,size(word)-2) as i 
+MERGE (t:IDCTechnology {name: word[i]}) 
 MERGE (uc)-[:REALIZEDBY]->(t)
-RETURN uc,t
+~~~
+
 
 ---
 
