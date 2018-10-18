@@ -65,6 +65,6 @@ LOAD csv with headers from "file:///IDCFunc2018.csv" AS IDCtech
 MATCH (uc:IDCUseCase {name:lower(IDCtech.UseCase)})
 with uc, SPLIT(IDCtech.TechnologyDeployed,",") AS word
 UNWIND range (0,size(word)-2) as i 
-MERGE (t:IDCTechnology {name: word[i]}) 
+MERGE (t:IDCTechnology {name: trim(word[i])}) 
 MERGE (uc)-[:REALIZEDBY]->(t)
 ~~~
