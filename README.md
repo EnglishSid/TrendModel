@@ -5,7 +5,7 @@
 ## Initial model
 ![model](images/idcmodel.png)
 
-* [Import Scripts](importScripts.md)
+* [Import Scripts](importScript.md)
 * [graph.db 4 neo4j](database/graph.db.7z)
 * [Setup your neo4j sandbox](https://github.dxc.com/DigitalExplorer/Digital-Explorer-Specs/blob/master/Sandbox/SandboxSetup/readme.md)
 
